@@ -40,17 +40,7 @@ public class FlowActions {
         return false;
     }
 
-    public String validphone(String phone){
-        return phone;
-    }
 
-    public String validadress(String adress){
-        return adress;
-    }
-
-    public String validname(String name){
-        return name;
-    }
 
     public String getinPhone(){
         return burgerOrder.getUser().getPhonenumber();
@@ -85,7 +75,7 @@ public class FlowActions {
         order.setOrderis(stringBuilder.toString());
 
         order.setPrice(bOrder.getPrice());
-        order.setPhone(bOrder.getPhone());
+
         if(bOrder.getAdress().equals(null)){
             order.setAdress("adress or shit");
         }
