@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+
+    <input name="burgerOrder" required="true"/>
+
+    <view-state id="pokupatel">
+        <transition on="phoneEntered" to="phonestore"/>
+        <transition on="login" to="pokupatelident"/>
+
+    </view-state>
+    
+    <action-state id="phonestore">
+        <evaluate expression="burgerOrder.phone=requestParameters.phone"/>
+        <transition to="adressandsame"/>
+    </action-state>
+
+
+    <view-state id="adressandsame">
+        <transition on="adressentered" to="savename"/>
+    </view-state>
+
+    <action-state id="savename">
+        <evaluate expression="burgerOrder.name=requestParameters.name" />
+        <transition to="pokupatel_done"/>
+    </action-state>
+    <view-state id="pokupatelident">
+        <transition on="logindone" to="pokupatel_done"/>
+        <transition on-exception="com.vadimrostov.domain.exeptions.LoggedInException" to="pokupatelident"/>
+    </view-state>
+
+
+
+    <end-state id="pokupatel_done">
+
+    </end-state>
+</flow>

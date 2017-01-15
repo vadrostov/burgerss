@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+
+    <var name="burgerOrder"  class="com.vadimrostov.order.BurgerOrder"/>
+
+    <decision-state id="iflogged">
+        <if test="flowActions.ifLogged()"
+            then="loggedinfo"
+            else="pokup"/>
+    </decision-state>
+
+
+    <action-state id="loggedinfo">
+        <evaluate expression="flowActions.thisuser()" result="burgerOrder.user"/>
+
+        <transition to="showorder"/>
+    </action-state>
+
+    <subflow-state id="pokup" subflow="burgers/pokupatel">
+        <input name="burgerOrder" value="burgerOrder"/>
+        <transition on="pokupatel_done" to="showorder"/>
+    </subflow-state>
+
+    <view-state id="showorder" view="order/showorder.jsp">
+    <transition on="gonext" to="adressview"/>
+    </view-state>
+
+
+    <view-state id="adressview" view="info/adressenter.jsp">
+        <transition to="adressset" on="adressEntered"/>
+    </view-state>
+
+    <action-state id="adressset">
+        <evaluate expression="burgerOrder.adress=requestParameters.adress" />
+        <transition to="moneys" />
+    </action-state>
+
+    <subflow-state id="moneys" subflow="burgers/moneys">
+        <input name="burgerOrder" value="burgerOrder"/>
+        <transition on="okstate" to="saveorderandrmi"/>
+    </subflow-state>
+
+    <action-state id="saveorderandrmi">
+            <evaluate expression="flowActions.saveOrder(burgerOrder)"/>
+
+        <transition to="ordernull"/>
+    </action-state>
+    <action-state id="ordernull">
+
+        <evaluate expression="flowActions.nullorder(burgerOrder)"/>
+        <transition to="okokstate"/>
+    </action-state>
+    <end-state id="okokstate" view="info/done.jsp">
+            </end-state>
+
+
+</flow>

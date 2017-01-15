@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <input name="burgerOrder" required="true"/>
+
+    <view-state id="moneyschoose" view="moneychoose.jsp">
+        <transition to="moneytype" on="moneyCh"/>
+
+    </view-state>
+    <decision-state id="moneytype">
+        <if test="flowActions.moneychoose(requestParameters.money)" then="moneysave" else="e_money"/>
+
+    </decision-state>
+
+    <view-state id="e_money">
+
+    </view-state>
+
+<action-state id="moneysave" >
+    <evaluate expression="flowActions.validmoney(requestParameters.money)" result="burgerOrder.money"/>
+    <transition to="okstate"/>
+
+</action-state>
+
+
+    <end-state id="okstate"/>
+</flow>
